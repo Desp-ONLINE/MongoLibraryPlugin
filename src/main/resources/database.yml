@@ -1,0 +1,6 @@
+mongodb:
+  url: "mongodb://" #또는 mongodb+srv://
+  address: "127.0.0.1"
+  port: 27017
+  user: "admin"
+  password: "1234"
