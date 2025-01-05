@@ -4,10 +4,13 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import lombok.Getter;
+import org.bson.UuidRepresentation;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
+@Getter
 public class MongoDB {
 
     private final MongoClient mongoClient;
@@ -26,11 +29,11 @@ public class MongoDB {
         String atlasString = String.format("%s%s:%s@%s:%s/", url, user, pass, address, port);
 
         ConnectionString connectionString = new ConnectionString(atlasString);
-        MongoClientSettings settings = MongoClientSettings.builder().applyConnectionString(connectionString).build();
+        MongoClientSettings settings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .uuidRepresentation(UuidRepresentation.STANDARD)
+                .build();
         mongoClient = MongoClients.create(settings);
     }
 
-    public MongoClient getMongoClient() {
-        return mongoClient;
-    }
 }

@@ -1,21 +1,16 @@
 package com.binggre.mongolibraryplugin;
 
 import com.mongodb.client.MongoClient;
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MongoLibraryPlugin extends JavaPlugin {
 
+    @Getter
     private static MongoLibraryPlugin inst;
 
-    public static MongoLibraryPlugin getInst() {
-        return inst;
-    }
-
+    @Getter
     private MongoClient mongoClient;
-
-    public MongoClient getMongoClient() {
-        return mongoClient;
-    }
 
     @Override
     public void onEnable() {
@@ -26,5 +21,6 @@ public final class MongoLibraryPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        super.onDisable();
     }
 }
