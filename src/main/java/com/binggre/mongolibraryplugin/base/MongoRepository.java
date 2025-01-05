@@ -95,9 +95,8 @@ public abstract class MongoRepository<ID, T extends MongoData<ID>> {
         Bson filter = Filters.eq(ID_FILED, entity.getId());
         Bson update;
 
-        if (value instanceof MongoObject mongoObject) {
-            String json = mongoObject.toJson();
-            Document document = Document.parse(json);
+        if (value instanceof MongoUpdatable updatable) {
+            Document document = updatable.toDocument();
             update = Updates.set(filed, document);
         } else {
             update = Updates.set(filed, value);
