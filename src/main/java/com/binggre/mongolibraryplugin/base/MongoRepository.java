@@ -91,6 +91,19 @@ public abstract class MongoRepository<ID, T extends MongoData<ID>> {
         runAsync(() -> deleteById(id));
     }
 
+    public T findByFilter(String field, Object filterValue) {
+        Bson filter = Filters.eq(field, filterValue);
+        Document find = collection.find(filter).first();
+        if (find == null) {
+            return null;
+        }
+        return toEntity(find);
+    }
+
+    public void findByFilterAsync(String field, Object filterValue, Callback<T> callback) {
+        runAsync(() -> callback.accept(findByFilter(field, filterValue)));
+    }
+
     public void update(T entity, String filed, Object value) {
         Bson filter = Filters.eq(ID_FILED, entity.getId());
         Bson update;
