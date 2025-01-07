@@ -92,7 +92,12 @@ public abstract class MongoRepository<ID, T extends MongoData<ID>> {
     }
 
     public T findByFilter(String field, Object filterValue) {
-        Bson filter = Filters.eq(field, filterValue);
+        Bson filter;
+        if (filterValue instanceof String stringFilter) {
+            filter = Filters.regex(field, "^" + stringFilter + "$", "i");
+        } else {
+            filter = Filters.eq(field, filterValue);
+        }
         Document find = collection.find(filter).first();
         if (find == null) {
             return null;
