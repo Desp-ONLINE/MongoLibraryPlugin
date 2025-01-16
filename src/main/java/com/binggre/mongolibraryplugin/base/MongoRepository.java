@@ -3,6 +3,7 @@ package com.binggre.mongolibraryplugin.base;
 import com.binggre.binggreapi.functions.Callback;
 import com.binggre.mongolibraryplugin.MongoLibraryPlugin;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Updates;
@@ -20,14 +21,15 @@ public abstract class MongoRepository<ID, T extends MongoData<ID>> {
     public static final String ID_FILED = "id";
 
     protected final Plugin plugin;
+    protected final MongoDatabase database;
     protected final MongoCollection<Document> collection;
     protected final ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
 
     public MongoRepository(Plugin plugin, String database, String collection) {
         this.plugin = plugin;
-        this.collection = MongoLibraryPlugin.getInst().getMongoClient()
-                .getDatabase(database)
-                .getCollection(collection);
+        this.database = MongoLibraryPlugin.getInst().getMongoClient().getDatabase(database);
+        this.database.createCollection(collection);
+        this.collection = this.database.getCollection(collection);
     }
 
     public abstract Document toDocument(T entity);
