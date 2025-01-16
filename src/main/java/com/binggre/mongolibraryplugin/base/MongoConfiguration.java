@@ -7,25 +7,23 @@ import com.mongodb.client.MongoDatabase;
 import lombok.Getter;
 import org.bson.Document;
 
+@Getter
 public abstract class MongoConfiguration {
 
     public abstract void init();
 
-    private transient boolean save;
-
-    @Getter
     protected transient final MongoDatabase database;
-    @Getter
     protected transient final MongoCollection<Document> collection;
 
-    public MongoConfiguration(String database, String collection) {
+    protected MongoConfiguration(String database, String collection) {
         this.database = MongoLibraryPlugin.getInst().getMongoClient().getDatabase(database);
         this.database.createCollection(collection);
         this.collection = this.database.getCollection(collection);
 
         Document configDocument = getConfigDocument();
         if (configDocument == null) {
-            save = true;
+            init();
+            save();
         }
     }
 
@@ -34,10 +32,7 @@ public abstract class MongoConfiguration {
     }
 
     public void save() {
-        if (save) {
-            collection.drop();
-            collection.insertOne(Document.parse(FileManager.toJson(this)));
-            save = false;
-        }
+        collection.drop();
+        collection.insertOne(Document.parse(FileManager.toJson(this)));
     }
 }
