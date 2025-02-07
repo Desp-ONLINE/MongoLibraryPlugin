@@ -15,16 +15,10 @@ public abstract class MongoConfiguration {
     protected transient final MongoDatabase database;
     protected transient final MongoCollection<Document> collection;
 
-    protected MongoConfiguration(String database, String collection) {
+    public MongoConfiguration(String database, String collection) {
         this.database = MongoLibraryPlugin.getInst().getMongoClient().getDatabase(database);
         this.database.createCollection(collection);
         this.collection = this.database.getCollection(collection);
-
-        Document configDocument = getConfigDocument();
-        if (configDocument == null) {
-            init();
-            save();
-        }
     }
 
     public Document getConfigDocument() {
@@ -32,7 +26,6 @@ public abstract class MongoConfiguration {
     }
 
     public void save() {
-        collection.drop();
         collection.insertOne(Document.parse(FileManager.toJson(this)));
     }
 }
