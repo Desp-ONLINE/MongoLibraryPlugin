@@ -26,6 +26,7 @@ public abstract class MongoConfiguration {
     }
 
     public void save() {
+        collection.drop();
         collection.insertOne(Document.parse(FileManager.toJson(this)));
     }
 }
